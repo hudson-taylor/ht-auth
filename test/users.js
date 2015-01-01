@@ -626,11 +626,11 @@ describe("Users", function() {
 
             var otp = speakeasy.totp({ key: response.secret })
 
-            conn.client.call("users", "confirmMFA", {
+            conn.client.call("users", "validateMFA", {
               id:    user1.id,
               type:  "totp",
               data: {
-                token: otp
+                otp: otp
               }
             }, function(err, response) {
 
@@ -784,6 +784,221 @@ describe("Users", function() {
           assert.notEqual(user, undefined);
 
           assert.equal(user.locked, false);
+
+          done();
+
+        });
+
+      });
+
+    });
+
+  });
+
+  describe("login", function() {
+
+    var conn;
+
+    var user2 = {
+      id:       "id@user2",
+      password: "password@user2"
+    };
+
+    before(function() {
+      conn = getRemote(db);
+    });
+
+    before(function(done) {
+      conn.client.call("users", "create", user2, function(err, response) {
+        assert.ifError(err);
+        assert.equal(response.id, user2.id);
+        done();
+      });
+    });
+
+    it("should return not-found if id does not exist", function(done) {
+
+      conn.client.call("users", "login", {
+        id: "doesnotexist",
+        password: "NOPE"
+      }, function(err, response) {
+
+        assert.ifError(err);
+
+        assert.deepEqual(response, { error: "not-found" });
+
+        done();
+
+      });
+
+    });
+
+    it("should not login successfully when using the wrong password", function(done) {
+
+      conn.client.call("users", "login", {
+        id: user2.id,
+        password: user2.password + "nope"
+      }, function(err, result) {
+
+        assert.ifError(err);
+
+        assert.deepEqual(result, { success: false });
+
+        done();
+
+      });
+
+    });
+
+    it("should login successfully when using the correct password", function(done) {
+
+      conn.client.call("users", "login", {
+        id:       user2.id,
+        password: user2.password
+      }, function(err, result) {
+
+        assert.ifError(err);
+
+        assert.deepEqual(result, { success: true });
+
+        done();
+
+      });
+
+    });
+
+    it("should not login successfully when account is locked", function(done) {
+
+      conn.client.call("users", "lock", {
+        id: user2.id
+      }, function(err, response) {
+
+        assert.ifError(err);
+
+        assert.deepEqual(response, { success: true });
+
+        conn.client.call("users", "login", {
+          id:       user2.id,
+          password: user2.password
+        }, function(err, result) {
+
+          assert.ifError(err);
+
+          assert.deepEqual(result, { success: false });
+
+          conn.client.call("users", "unlock", {
+            id: user2.id
+          }, function(err, response) {
+
+            assert.ifError(err);
+
+            assert.deepEqual(response, { success: true });
+
+            done();
+
+          });
+
+        });
+
+      });
+
+    });
+
+    it("should not require MFA while pending confirmation", function(done) {
+
+      conn.client.call("users", "enableMFA", {
+        id: user2.id,
+        type: "totp"
+      }, function(err, response) {
+
+        assert.ifError(err);
+
+        assert.notEqual(response.secret, undefined);
+
+        conn.client.call("users", "login", {
+          id:       user2.id,
+          password: user2.password
+        }, function(err, response) {
+
+          assert.ifError(err);
+
+          assert.deepEqual(response, { success: true });
+
+          done();
+
+        });
+
+      });
+
+    });
+
+    it("should not successfully login when MFA is required", function(done) {
+
+      users.findOne({
+        id: user2.id
+      }, function(err, user) {
+
+        assert.ifError(err);
+
+        var otp = speakeasy.totp({ key: user._mfa_totp });
+
+        conn.client.call("users", "validateMFA", {
+          id: user2.id,
+          type: "totp",
+          data: {
+            otp: otp
+          }
+        }, function(err, response) {
+
+          assert.ifError(err);
+
+          assert.deepEqual(response, { success: true });
+
+          conn.client.call("users", "login", {
+            id:       user2.id,
+            password: user2.password
+          }, function(err, response) {
+
+            assert.ifError(err);
+
+            assert.deepEqual(response, { success: false });
+
+            done();
+
+          });
+
+        });
+
+      });
+
+    });
+
+    it("should successfully login when MFA is required", function(done) {
+
+      users.findOne({
+        id: user2.id
+      }, function(err, user) {
+
+        assert.ifError(err);
+
+        var otp = speakeasy.totp({ key: user.mfa_totp });
+
+        conn.client.call("users", "login", {
+          id:       user2.id,
+          password: user2.password,
+          mfa: [
+            {
+              type: "totp",
+              data: {
+                otp: otp
+              }
+            }
+          ]
+        }, function(err, response) {
+
+          assert.ifError(err);
+
+          assert.deepEqual(response, { success: true });
 
           done();
 

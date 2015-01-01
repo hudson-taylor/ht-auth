@@ -1,12 +1,13 @@
 {
   "name": "ht-auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Hudson-Taylor Authentication and user management service",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
+    "async": "^0.9.0",
     "bcrypt": "^0.8.0",
     "ht-schema": "^0.0.4",
     "hudson-taylor": "^1.0.0",
@@ -16,7 +17,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec --check-leaks --throw-deprecation"
   },
   "author": "Adam Brady <adam@boxxen.org>",
   "license": "BSD"
