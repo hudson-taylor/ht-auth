@@ -1,6 +1,6 @@
 {
   "name": "ht-auth",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Hudson-Taylor Authentication and user management service",
   "main": "lib/index.js",
   "directories": {
@@ -9,6 +9,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "bcrypt": "^0.8.0",
+    "chapi": "0.0.1",
     "ht-schema": "^0.0.4",
     "hudson-taylor": "^1.0.0",
     "mongodb": "^1.4.19",

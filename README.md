@@ -5,6 +5,7 @@
 Supports:
 
 * User Registration
+* Muliple password hashing algorithms
 * Password Changing
 * Password Resets
 * 2 Factor Authentication
@@ -16,7 +17,6 @@ Coming Soon:
 
 * HOTP Support
 * OAuth Login Support
-* More password hashing algorithms
 * SQL Backing support
 
 # License
