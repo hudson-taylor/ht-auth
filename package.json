@@ -17,7 +17,8 @@
     "yub": "^0.10.8"
   },
   "devDependencies": {
-    "6to5": "^2.4.8"
+    "6to5": "^2.4.8",
+    "mocha": "^2.1.0"
   },
   "scripts": {
     "test": "mocha -R spec --check-leaks --throw-deprecation",
