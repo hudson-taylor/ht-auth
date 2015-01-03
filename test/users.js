@@ -679,7 +679,30 @@ describe("Users", function() {
           conn = getRemote(db);
         });
 
+        it("should not enable yubikey MFA when no credentials are given", function(done) {
+
+          conn.client.call("users", "enableMFA", {
+            id:   user1.id,
+            type: "yubikey",
+            data: {
+              otp: otp
+            }
+          }, function(err) {
+
+            assert.deepEqual(err, { error: "Failed to parse schema.type: string does not match enum: totp" });
+
+            done();
+
+          });
+
+        });
+
         it("should set yubikey id", function(done) {
+
+          conn = getRemote(db, {
+            yubikeyClientId:     "1",
+            yubikeyClientSecret: "2"
+          });
 
           conn.client.call("users", "enableMFA", {
             id:   user1.id,
