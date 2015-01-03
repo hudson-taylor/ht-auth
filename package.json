@@ -16,9 +16,12 @@
     "speakeasy": "^1.0.3",
     "yub": "^0.10.8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "6to5": "^2.4.8"
+  },
   "scripts": {
-    "test": "mocha -R spec --check-leaks --throw-deprecation"
+    "test": "mocha -R spec --check-leaks --throw-deprecation",
+    "build": "node ./node_modules/6to5/bin/6to5 src -d lib"
   },
   "author": "Adam Brady <adam@boxxen.org>",
   "license": "BSD"
