@@ -8,10 +8,9 @@
   },
   "dependencies": {
     "async": "^0.9.0",
-    "bcrypt": "^0.8.0",
     "chapi": "0.0.1",
     "ht-schema": "^0.0.4",
-    "hudson-taylor": "^1.0.0",
+    "hudson-taylor": "^2.0.0",
     "mongodb": "^1.4.19",
     "speakeasy": "^1.0.3",
     "yub": "^0.10.8"
