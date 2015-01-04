@@ -21,9 +21,9 @@ var getRemote = function(db, options) {
   });
   var service = Users(transport, db, options);
   return {
-    transport: transport,
-    client:    client,
-    service:   service
+    transport,
+    client,
+    service
   };
 };
 
@@ -46,7 +46,7 @@ describe("Users", function() {
     password: "user1"
   };
 
-  before(function(done) {
+  before((done) => {
 
     mongo.create(config.mongo, function(err, _db) {
       assert.ifError(err);
@@ -58,7 +58,7 @@ describe("Users", function() {
 
   });
 
-  after(function(done) {
+  after((done) => {
     // scrub dbs after tests
     var drop = function(db, cb) {
       db.drop(function(err) {
@@ -87,7 +87,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -205,7 +205,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -249,7 +249,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -261,7 +261,7 @@ describe("Users", function() {
 
       conn.client.call("users", "update", {
         id:   user1.id,
-        data: data
+        data
       }, function(err) {
 
         assert.ifError(err);
@@ -290,7 +290,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -319,7 +319,7 @@ describe("Users", function() {
       conn.client.call("users", "updatePassword", {
         id:      user1.id,
         oldPass: user1.password,
-        newPass: newPass
+        newPass
       }, function(err, result) {
 
         assert.ifError(err);
@@ -389,7 +389,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -444,7 +444,7 @@ describe("Users", function() {
 
     var conn, challenge;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -500,7 +500,7 @@ describe("Users", function() {
     it("should remove resets when they have been used", function(done) {
 
       forgotpw.findOne({
-        challenge: challenge
+        challenge
       }, function(err, entry) {
 
         assert.ifError(err);
@@ -568,7 +568,7 @@ describe("Users", function() {
 
         var conn;
 
-        before(function() {
+        before(() => {
           conn = getRemote(db);
         });
 
@@ -611,7 +611,7 @@ describe("Users", function() {
 
         var conn;
 
-        before(function() {
+        before(() => {
           conn = getRemote(db);
         });
 
@@ -675,7 +675,7 @@ describe("Users", function() {
 
         var otp = "abcdefghijklmnopqrstuv";
 
-        before(function() {
+        before(() => {
           conn = getRemote(db);
         });
 
@@ -685,7 +685,7 @@ describe("Users", function() {
             id:   user1.id,
             type: "yubikey",
             data: {
-              otp: otp
+              otp
             }
           }, function(err) {
 
@@ -708,7 +708,7 @@ describe("Users", function() {
             id:   user1.id,
             type: "yubikey",
             data: {
-              otp: otp
+              otp
             }
           }, function(err, response) {
 
@@ -752,7 +752,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -787,7 +787,7 @@ describe("Users", function() {
 
     var conn;
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -827,7 +827,7 @@ describe("Users", function() {
       password: "password@user2"
     };
 
-    before(function() {
+    before(() => {
       conn = getRemote(db);
     });
 
@@ -969,7 +969,7 @@ describe("Users", function() {
           id: user2.id,
           type: "totp",
           data: {
-            otp: otp
+            otp
           }
         }, function(err, response) {
 
@@ -1013,7 +1013,7 @@ describe("Users", function() {
             {
               type: "totp",
               data: {
-                otp: otp
+                otp
               }
             }
           ]

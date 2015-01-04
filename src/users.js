@@ -1,15 +1,15 @@
 
 "use strict";
 
-var ht = require("hudson-taylor");
-var s  = require("ht-schema");
+const ht = require("hudson-taylor");
+const s  = require("ht-schema");
 
-var crypto = require("crypto");
+const crypto = require("crypto");
 
-var speakeasy = require("speakeasy");
-var yub       = require("yub");
-var async     = require("async");
-var chapi     = require("chapi");
+const speakeasy = require("speakeasy");
+const yub       = require("yub");
+const async     = require("async");
+const chapi     = require("chapi");
 
 /*
  
@@ -46,10 +46,7 @@ var optionsSchema = s.Object({ opt: true }, {
   yubikeyClientSecret: s.String({ opt: true })
 });
 
-module.exports = function(transport, db, options, log) {
-
-  if(!log)     log     = console.log;
-  if(!options) options = {};
+module.exports = function(transport, db, options = {}, log = console.log) {
 
   try {
     optionsSchema.validate(options);
@@ -68,6 +65,8 @@ module.exports = function(transport, db, options, log) {
     }
 
   });
+
+  // TODO: Change the following to destructuring w/ defaults when 6to5 gains support.
 
   // Setup defaults for options
   var requirePassword = options.requirePassword !== undefined ? options.requirePassword   : true;
@@ -397,7 +396,7 @@ module.exports = function(transport, db, options, log) {
 
   var enableMFA = {
 
-    totp: function(user, data, callback) {
+    totp(user, data, callback) {
 
       if(user.mfa_totp) {
         return callback(null, {
@@ -437,7 +436,7 @@ module.exports = function(transport, db, options, log) {
 
     },
 
-    yubikey: function(user, data, callback) {
+    yubikey(user, data, callback) {
 
       // We don't really need to have enable & confirm for yubikey, seeing as the
       // otp returned is proof enough that they have physical access, but for the sake
@@ -470,7 +469,7 @@ module.exports = function(transport, db, options, log) {
 
   var validateMFA = {
 
-    totp: function(user, data, callback) {
+    totp(user, data, callback) {
 
       var secret = user.mfa_totp || user._mfa_totp;
 
@@ -524,7 +523,7 @@ module.exports = function(transport, db, options, log) {
 
     },
 
-    yubikey: function(user, data, callback) {
+    yubikey(user, data, callback) {
 
       var yubiId = user.mfa_yubikey || user._mfa_yubikey;
 
@@ -726,7 +725,7 @@ module.exports = function(transport, db, options, log) {
         }
 
         if(!neededTypes.every(function(type) {
-          for(var i = 0; i < request.mfa.length; i++) {
+          for(let i = 0; i < request.mfa.length; i++) {
             if(request.mfa[0].type == type) {
               return true;
             }
