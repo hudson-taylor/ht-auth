@@ -1,5 +1,7 @@
 # ht-auth
 
+[![Build Status](https://travis-ci.org/SomeoneWeird/ht-auth.svg?branch=master)](https://travis-ci.org/SomeoneWeird/ht-auth)
+
 `ht-auth` is a Hudson-Taylor service for managing users and authentication. It encapsulates best-practice for handling sensitive user information and logins.
 
 Supports:
