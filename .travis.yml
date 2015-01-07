@@ -6,3 +6,5 @@ before_install:
   - "npm run build"
 services:
   - mongodb
+notifications:
+  irc: "chat.freenode.net#htjs"
