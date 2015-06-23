@@ -24,6 +24,10 @@
     "test": "npm run build && mocha -R spec --check-leaks --throw-deprecation",
     "build": "node ./node_modules/6to5/bin/6to5 src -d lib && node ./node_modules/6to5/bin/6to5 test-src -d test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hudson-taylor/ht-auth.git"
+  },
   "author": "Adam Brady <adam@boxxen.org>",
   "license": "BSD"
 }
