@@ -66,16 +66,16 @@ module.exports = function(transport, db, options = {}, log = console.log) {
 
   });
 
-  // TODO: Change the following to destructuring w/ defaults when 6to5 gains support.
-
   // Setup defaults for options
-  var requirePassword = options.requirePassword !== undefined ? options.requirePassword   : true;
-  var pwAlgorithm     = options.pwAlgorithm     !== undefined ? options.pwAlgorithm       : 'bcrypt';
-  var pwResetTimeout  = options.pwResetTimeout  !== undefined ? options.pwResetTimeout    : 7200000; // 2 hours
-  var totpKeyLength   = options.totpKeyLength   !== undefined ? options.totpKeyLength     : 20;
+  let {
+    requirePassword    = true,
+    pwAlgorithm        = 'bcrypt',
+    pwAlgorithmOptions = {},
+    pwResetTimeout     = 7200000,
+    totpKeyLength      = 20
+  } = options;
 
   // Set default options depending on what algorithm is chosen
-  var pwAlgorithmOptions = options.pwAlgorithmOptions || {};
 
   switch(pwAlgorithm) {
     case "bcrypt": {
