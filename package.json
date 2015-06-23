@@ -18,11 +18,16 @@
   "devDependencies": {
     "babel": "^5.6.4",
     "bcrypt": "^0.8.0",
-    "mocha": "^2.1.0"
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.15",
+    "mocha": "^2.2.5"
   },
   "scripts": {
-    "test": "npm run build && mocha -R spec --check-leaks --throw-deprecation",
-    "build": "node ./node_modules/babel/bin/babel src -d lib && node ./node_modules/babel/bin/babel test-src -d test"
+    "test": "npm run build && mocha -R spec --check-leaks --throw-deprecation --bail test/",
+    "build": "node ./node_modules/babel/bin/babel src -d lib && node ./node_modules/babel/bin/babel test-src -d test",
+    "coverage": "npm run build && ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd --recursive -R spec -t 5000",
+    "push-coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

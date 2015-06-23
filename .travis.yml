@@ -3,9 +3,8 @@ node_js:
   - "0.10"
   - "0.12"
   - "iojs"
-before_install:
-  - "npm install"
-  - "npm run build"
+script: "npm run coverage"
+after_success: "npm run push-coverage"
 services:
   - mongodb
 notifications:
