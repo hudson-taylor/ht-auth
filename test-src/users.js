@@ -169,7 +169,7 @@ describe("Users", function() {
         id: "hello"
       }, function(err) {
 
-        assert.equal(err.error, "Missing attribute 'schema.password': required String");
+        assert.equal(err.error, "Missing attribute 'schema.password': Got undefined, required String");
 
         done();
 
@@ -689,7 +689,7 @@ describe("Users", function() {
             }
           }, function(err) {
 
-            assert.deepEqual(err, { error: "Failed to parse schema.type: string does not match enum: totp" });
+            assert.equal(err.error, "Failed to parse schema.type: Got yubikey, does not match enum option");
 
             done();
 

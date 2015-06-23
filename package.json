@@ -8,26 +8,26 @@
   },
   "dependencies": {
     "async": "^0.9.0",
-    "chapi": "0.0.1",
-    "ht-schema": "^0.0.4",
-    "hudson-taylor": "^2.0.0",
+    "chapi": "^1.0.0",
+    "ht-schema": "^3.0.0",
+    "hudson-taylor": "^6.0.0",
     "mongodb": "^1.4.19",
     "speakeasy": "^1.0.3",
     "yub": "^0.10.8"
   },
   "devDependencies": {
-    "6to5": "^2.4.8",
+    "babel": "^5.6.4",
     "bcrypt": "^0.8.0",
     "mocha": "^2.1.0"
   },
   "scripts": {
     "test": "npm run build && mocha -R spec --check-leaks --throw-deprecation",
-    "build": "node ./node_modules/6to5/bin/6to5 src -d lib && node ./node_modules/6to5/bin/6to5 test-src -d test"
+    "build": "node ./node_modules/babel/bin/babel src -d lib && node ./node_modules/babel/bin/babel test-src -d test"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/hudson-taylor/ht-auth.git"
   },
   "author": "Adam Brady <adam@boxxen.org>",
-  "license": "BSD"
+  "license": "BSD-2-Clause"
 }
