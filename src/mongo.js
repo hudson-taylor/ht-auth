@@ -1,19 +1,23 @@
 
-"use strict";
+import mongodb from "mongodb";
 
-var mongodb = require('mongodb');
+export { ObjectID } from "mongodb";
 
-exports.ObjectID = mongodb.ObjectID;
-exports.mongodb  = mongodb;
-exports.create   = create;
+export function create(config, cb) {
 
-function create(config, cb) {
+    let {
+        host,
+        port,
+        database,
+        journal = true,
+        w       = 1
+    } = config;
 
-    var localServer = new mongodb.Server(config.host, config.port);
+    const localServer = new mongodb.Server(host, port);
 
-    var mongo = new mongodb.Db(config.database, localServer, {
-        journal: config.journal !== undefined ? config.journal : true,
-        w: config.w !== undefined ? config.w : 1
+    const mongo = new mongodb.Db(database, localServer, {
+        journal,
+        w
     });
 
     mongo.open(function(err, db) {

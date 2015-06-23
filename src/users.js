@@ -1,15 +1,13 @@
 
-"use strict";
+import crypto from "crypto";
 
-const ht = require("hudson-taylor");
-const s  = require("ht-schema");
+import ht from "hudson-taylor";
+import s  from "ht-schema";
 
-const crypto = require("crypto");
-
-const speakeasy = require("speakeasy");
-const yub       = require("yub");
-const async     = require("async");
-const chapi     = require("chapi");
+import speakeasy from "speakeasy";
+import yub       from "yub";
+import async     from "async";
+import chapi     from "chapi";
 
 /*
  
@@ -34,7 +32,7 @@ const chapi     = require("chapi");
 
 */
 
-var optionsSchema = s.Object({ opt: true }, {
+const optionsSchema = s.Object({ opt: true }, {
   requirePassword:    s.Boolean({ opt: true }),
   pwAlgorithm:        s.String({ opt: true, enum: [ "bcrypt", "scrypt", "pbkdf2" ] }),
   pwAlgorithmOptions: s.Object({ opt: true }, {
@@ -46,7 +44,7 @@ var optionsSchema = s.Object({ opt: true }, {
   yubikeyClientSecret: s.String({ opt: true })
 });
 
-module.exports = function(transport, db, options = {}, log = console.log) {
+export default function(transport, db, options = {}, log = console.log) {
 
   try {
     optionsSchema.validate(options);
@@ -54,9 +52,9 @@ module.exports = function(transport, db, options = {}, log = console.log) {
     throw new Error("Invalid options: " + e.toString());
   }
 
-  var service  = new ht.Service(transport, options);
-  var users    = db.collection("users");
-  var forgotpw = db.collection("forgotpw");
+  const service  = new ht.Service(transport, options);
+  const users    = db.collection("users");
+  const forgotpw = db.collection("forgotpw");
 
   db.ensureIndex('users', { id: 1 }, { unique: true, dropDups: true, w: 1 }, function(err) {
 
@@ -92,7 +90,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
     }
   }
 
-  var mfaTypes = [ "totp" ];
+  let mfaTypes = [ "totp" ];
 
   // Initialise third-party libraries needed
 
@@ -259,7 +257,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
       }
 
       // TODO: hash this again? time tradeoff, make optional
-      var challenge = bytes.toString("hex");
+      const challenge = bytes.toString("hex");
 
       forgotpw.insert({
         id:        request.id,
@@ -394,7 +392,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
 
   });
 
-  var enableMFA = {
+  const enableMFA = {
 
     totp(user, data, callback) {
 
@@ -411,7 +409,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
           return callback(err);
         }
 
-        var secret = speakeasy.generate_key({ length: totpKeyLength }).hex;
+        const secret = speakeasy.generate_key({ length: totpKeyLength }).hex;
 
         users.update({
           id: user.id
@@ -442,7 +440,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
       // otp returned is proof enough that they have physical access, but for the sake
       // of keeping the API consistent, require confirm call too.
 
-      var yubiId = data.otp.substr(0, 12);
+      const yubiId = data.otp.substr(0, 12);
 
       users.update({
         id: user.id
@@ -467,11 +465,11 @@ module.exports = function(transport, db, options = {}, log = console.log) {
 
   }
 
-  var validateMFA = {
+  const validateMFA = {
 
     totp(user, data, callback) {
 
-      var secret = user.mfa_totp || user._mfa_totp;
+      const secret = user.mfa_totp || user._mfa_totp;
 
       if(!secret) {
         return callback(null, {
@@ -479,9 +477,9 @@ module.exports = function(transport, db, options = {}, log = console.log) {
         });
       }
 
-      var otp = speakeasy.totp({ key: secret });
+      const otp = speakeasy.totp({ key: secret });
 
-      var success = otp == data.otp;
+      const success = otp == data.otp;
 
       if(!success) {
         return finish();
@@ -525,7 +523,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
 
     yubikey(user, data, callback) {
 
-      var yubiId = user.mfa_yubikey || user._mfa_yubikey;
+      const yubiId = user.mfa_yubikey || user._mfa_yubikey;
 
       if(!yubiId) {
         return callback(null, {
@@ -546,7 +544,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
           return callback(err);
         }
 
-        var valid = data.status === "OK" && data.signatureVerified === true && data.nonceVerified === true;
+        const valid = data.status === "OK" && data.signatureVerified === true && data.nonceVerified === true;
 
         if(!valid) {
           return callback(null, {
@@ -708,7 +706,7 @@ module.exports = function(transport, db, options = {}, log = console.log) {
 
       function checkMFA(done) {
 
-        var neededTypes = mfaTypes.map(function(type) {
+        const neededTypes = mfaTypes.map(function(type) {
           return user['mfa_' + type] && type;
         }).filter(Boolean);
 

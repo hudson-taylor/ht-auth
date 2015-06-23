@@ -1,10 +1,8 @@
 
-"use strict";
+import crypto from "crypto";
 
-var crypto = require("crypto");
-
-var ht = require("hudson-taylor");
-var s  = require("ht-schema");
+import ht from "hudson-taylor";
+import s  from "ht-schema";
 
 /*
  
@@ -22,17 +20,16 @@ var s  = require("ht-schema");
 
 */
 
-module.exports = function(transport, db, options, log) {
+export default function(transport, db, options = {}, log = console.log) {
 
-	if(!log)     log     = console.log;
-	if(!options) options = {};
-
-	var service  = new ht.Service(transport, options);
-	var sessions = db.collection("sessions");
+	const service  = new ht.Service(transport, options);
+	const sessions = db.collection("sessions");
 
 	// Set defaults for options
-	var sessionIdLength = options.sessionIdLength || 20;
-	var sessionLength   = options.sessionLength   || 3600000;
+	let {
+		sessionIdLength = 20,
+		sessionLength   = 3600000
+	} = options;
 
 	service.on("create", s.Object({
 		expires: s.Number({ opt: true }),
@@ -46,7 +43,7 @@ module.exports = function(transport, db, options, log) {
 			return callback(e);
 		}
 
-		var expiration = request.expires || (Date.now() + sessionLength);
+		const expiration = request.expires || (Date.now() + sessionLength);
 
 		crypto.randomBytes(sessionIdLength / 2, function(err, bytes) {
 
@@ -54,7 +51,7 @@ module.exports = function(transport, db, options, log) {
 				return callback(err);
 			}
 
-			var sessionId = bytes.toString("hex");
+			const sessionId = bytes.toString("hex");
 
 			sessions.insert({
 				_id:     sessionId,
