@@ -1,5 +1,5 @@
 {
-  "name": "ht-auth",
+  "name": "hudson-taylor-auth",
   "version": "0.1.0",
   "description": "Hudson-Taylor Authentication and user management service",
   "main": "lib/index.js",
