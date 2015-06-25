@@ -261,7 +261,7 @@ export default function(transport, db, options = {}, log = console.log) {
 
       forgotpw.insert({
         id:        request.id,
-        challenge: challenge,
+        challenge,
         expires:   Date.now() + (request.expiryTimeout || pwResetTimeout)
       }, { safe: true, w: 1 }, function(err) {
 
@@ -271,7 +271,7 @@ export default function(transport, db, options = {}, log = console.log) {
         }
 
         return callback(null, {
-          challenge: challenge
+          challenge
         });
 
       });
@@ -425,7 +425,7 @@ export default function(transport, db, options = {}, log = console.log) {
           }
 
           return callback(null, {
-            secret: secret
+            secret
           });
 
         });
@@ -515,7 +515,7 @@ export default function(transport, db, options = {}, log = console.log) {
 
       function finish() {
         return callback(null, {
-          success: success
+          success
         });
       }
 
@@ -582,7 +582,7 @@ export default function(transport, db, options = {}, log = console.log) {
 
         function finish() {
           return callback(null, {
-            success: success
+            success
           });
         }
 
@@ -772,7 +772,7 @@ export default function(transport, db, options = {}, log = console.log) {
 
   function findUser(id, callback) {
     users.findOne({
-      id: id
+      id
     }, callback);
   }
 

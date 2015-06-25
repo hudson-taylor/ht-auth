@@ -18,9 +18,9 @@ var getRemote = function(db, options) {
 	});
 	var service = Session(transport, db, options);
 	return {
-		transport: transport,
-		client:    client,
-		service:   service
+		transport,
+		client,
+		service
 	};
 };
 
@@ -141,7 +141,7 @@ describe("Sessions", function() {
 
 			conn.client.call("sessions", "create", {
 				data:    { test: 1234 },
-				expires: expires
+				expires
 			}, function(err, response) {
 
 				assert.ifError(err);
@@ -197,7 +197,7 @@ describe("Sessions", function() {
       };
 
       conn.client.call("sessions", "create", {
-        data: data
+        data
       }, function(err, response) {
 
         assert.ifError(err);
