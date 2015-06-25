@@ -100,7 +100,7 @@ export default function(transport, db, options = {}, log = console.log) {
   }
 
   service.on("create", s.Object({
-    id:       s.String({ opt: false               }),
+    id:       s.String(),
     password: s.String({ opt: !requirePassword    }),
     data:     s.Object({ opt: true, strict: false })
   }), function(request, callback) {
@@ -148,7 +148,7 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("get", s.Object({
-    id: s.String({ opt: false })
+    id: s.String()
   }), function(request, callback) {
     findUser(request.id, function(err, user) {
       if(err) {
@@ -164,7 +164,7 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("update", s.Object({
-    id:   s.String({ opt: false               }),
+    id:   s.String(),
     data: s.Object({ opt: true, strict: false })
   }), function(request, callback) {
 
@@ -181,9 +181,9 @@ export default function(transport, db, options = {}, log = console.log) {
   // TODO: split out password management functions into new file
 
   service.on("updatePassword", s.Object({
-    id:      s.String({ opt: false }),
-    oldPass: s.String({ opt: false }),
-    newPass: s.String({ opt: false })
+    id:      s.String(),
+    oldPass: s.String(),
+    newPass: s.String()
   }), function(request, callback) {
 
     findUser(request.id, function(err, user) {
@@ -245,7 +245,7 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("initiateForgotPassword", s.Object({
-    id:            s.String({ opt: false }),
+    id:            s.String(),
     expiryTimeout: s.Number({ opt: true })
   }), function(request, callback) {
 
@@ -281,9 +281,9 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("completeForgotPassword", s.Object({
-    id:          s.String({ opt: false }),
-    challenge:   s.String({ opt: false }),
-    newPassword: s.String({ opt: false })
+    id:          s.String(),
+    challenge:   s.String(),
+    newPassword: s.String()
   }), function(request, callback) {
 
     forgotpw.findAndRemove({
@@ -343,8 +343,8 @@ export default function(transport, db, options = {}, log = console.log) {
 
   // TODO: Split MFA into seperate files
   service.on("enableMFA", s.Object({
-    id:   s.String({ opt: false }),
-    type: s.String({ opt: false, enum: mfaTypes }),
+    id:   s.String(),
+    type: s.String({ enum: mfaTypes }),
     data: s.Object({ opt: true,  strict: false })
   }), function(request, callback) {
 
@@ -368,8 +368,8 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("validateMFA", s.Object({
-    id:   s.String({ opt: false                 }),
-    type: s.String({ opt: false, enum: mfaTypes }),
+    id:   s.String(),
+    type: s.String({ enum: mfaTypes }),
     data: s.Object({ opt: true,  strict: false  })
   }), function(request, callback) {
 
@@ -593,7 +593,7 @@ export default function(transport, db, options = {}, log = console.log) {
   }
 
   service.on("lock", s.Object({
-    id: s.String({ opt: false })
+    id: s.String()
   }), function(request, callback) {
 
     users.update({
@@ -618,7 +618,7 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("unlock", s.Object({
-    id: s.String({ opt: false })
+    id: s.String()
   }), function(request, callback) {
 
     users.update({
@@ -643,12 +643,12 @@ export default function(transport, db, options = {}, log = console.log) {
   });
 
   service.on("login", s.Object({
-    id:       s.String({ opt: false }),
+    id:       s.String(),
     password: s.String({ opt: !requirePassword }),
     mfa:      s.Array({ opt: true }, [
-      s.Object({ opt: false }, {
-        type: s.String({ opt: false, enum: mfaTypes }),
-        data: s.Object({ opt: false, strict: false  })
+      s.Object({
+        type: s.String({ enum: mfaTypes }),
+        data: s.Object({ strict: false  })
       })
     ])
   }), function(request, callback) {
